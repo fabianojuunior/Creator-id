@@ -1,0 +1,849 @@
+```jsx
+import { useState } from 'react';
+
+export default function App() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('dashboard');
+  
+  // Mock data for the dashboard
+  const recentFiles = [
+    { id: 1, name: 'MediaKit.pdf', type: 'document', date: '2 days ago' },
+    { id: 2, name: 'CollabProposal.docx', type: 'document', date: '3 days ago' },
+    { id: 3, name: 'BrandGuidelines.zip', type: 'archive', date: '1 week ago' },
+    { id: 4, name: 'ProfileLogo.png', type: 'image', date: '2 weeks ago' },
+  ];
+  
+  const contracts = [
+    { id: 1, title: 'Brand Partnership Agreement', status: 'active', dueDate: '2023-12-01' },
+    { id: 2, title: 'Collaboration Contract', status: 'pending', dueDate: '2023-11-15' },
+    { id: 3, title: 'Sponsorship Agreement', status: 'completed', dueDate: '2023-10-10' },
+  ];
+  
+  const passwordEntries = [
+    { id: 1, service: 'Instagram', username: 'creator_john' },
+    { id: 2, service: 'YouTube', username: 'john_doe' },
+    { id: 3, service: 'TikTok', username: 'johnnytoks' },
+  ];
+
+  const renderDashboard = () => (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold text-gray-800">Dashboard</h2>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-lg font-semibold text-gray-700 mb-4">Recent Files</h3>
+          <ul className="space-y-3">
+            {recentFiles.map(file => (
+              <li key={file.id} className="flex items-center justify-between">
+                <span className="text-gray-600">{file.name}</span>
+                <span className="text-sm text-gray-400">{file.date}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-lg font-semibold text-gray-700 mb-4">Contracts</h3>
+          <ul className="space-y-3">
+            {contracts.map(contract => (
+              <li key={contract.id} className="flex items-center justify-between">
+                <span className="text-gray-600">{contract.title}</span>
+                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                  contract.status === 'active' ? 'bg-green-100 text-green-800' : 
+                  contract.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
+                  'bg-gray-100 text-gray-800'
+                }`}>
+                  {contract.status}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-lg font-semibold text-gray-700 mb-4">Password Manager</h3>
+          <ul className="space-y-3">
+            {passwordEntries.map(entry => (
+              <li key={entry.id} className="flex items-center justify-between">
+                <span className="text-gray-600">{entry.service}</span>
+                <span className="text-gray-500">{entry.username}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+      
+      <div className="bg-white rounded-lg shadow p-6">
+        <h3 className="text-lg font-semibold text-gray-700 mb-4">Media Kit Generator</h3>
+        <div className="flex flex-col md:flex-row gap-4">
+          <button className="flex-1 bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 transition">
+            Generate Media Kit
+          </button>
+          <button className="flex-1 bg-gray-200 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-300 transition">
+            Customize Template
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderContracts = () => (
+    <div>
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">Contracts</h2>
+      
+      <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+          <h3 className="text-lg font-semibold text-gray-700">Your Contracts</h3>
+          <button className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition">
+            New Contract
+          </button>
+        </div>
+        
+        <div className="divide-y divide-gray-200">
+          {contracts.map(contract => (
+            <div key={contract.id} className="p-4 hover:bg-gray-50 transition">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h4 className="font-medium text-gray-800">{contract.title}</h4>
+                  <p className="text-sm text-gray-500">Due: {contract.dueDate}</p>
+                </div>
+                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                  contract.status === 'active' ? 'bg-green-100 text-green-800' : 
+                  contract.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
+                  'bg-gray-100 text-gray-800'
+                }`}>
+                  {contract.status}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderMediaKit = () => (
+    <div>
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">Media Kit</h2>
+      
+      <div className="bg-white rounded-lg shadow p-6 text-center">
+        <div className="mb-6">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-indigo-100 text-indigo-600 mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <h3 className="text-xl font-semibold text-gray-800 mb-2">Create Your Media Kit</h3>
+          <p className="text-gray-500 mb-6">Generate a professional media kit with your content, stats, and brand information</p>
+        </div>
+        
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <button className="bg-indigo-600 text-white py-3 px-6 rounded-lg hover:bg-indigo-700 transition">
+            Generate Media Kit
+          </button>
+          <button className="bg-gray-200 text-gray-700 py-3 px-6 rounded-lg hover:bg-gray-300 transition">
+            Customize Template
+          </button>
+        </div>
+      </div>
+      
+      <div className="mt-8">
+        <h3 className="text-lg font-semibold text-gray-700 mb-4">Recent Media Kits</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {['Q4 Pitch Deck', 'Brand Collab Kit', 'Creator Portfolio'].map((kit, index) => (
+            <div key={index} className="bg-white rounded-lg shadow p-4 hover:shadow-md transition">
+              <div className="flex items-center justify-between mb-2">
+                <h4 className="font-medium text-gray-800">{kit}</h4>
+                <span className="text-sm text-gray-500">2 days ago</span>
+              </div>
+              <p className="text-sm text-gray-500 mb-4">Last edited by you</p>
+              <div className="flex gap-2">
+                <button className="flex-1 bg-indigo-50 text-indigo-600 py-2 px-3 rounded text-sm hover:bg-indigo-100 transition">
+                  View
+                </button>
+                <button className="flex-1 bg-gray-100 text-gray-600 py-2 px-3 rounded text-sm hover:bg-gray-200 transition">
+                  Download
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderPasswordManager = () => (
+    <div>
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">Password Manager</h2>
+      
+      <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+          <h3 className="text-lg font-semibold text-gray-700">Your Passwords</h3>
+          <button className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition">
+            Add New
+          </button>
+        </div>
+        
+        <div className="divide-y divide-gray-200">
+          {passwordEntries.map(entry => (
+            <div key={entry.id} className="p-4 hover:bg-gray-50 transition flex justify-between items-center">
+              <div>
+                <h4 className="font-medium text-gray-800">{entry.service}</h4>
+                <p className="text-sm text-gray-500">{entry.username}</p>
+              </div>
+              <div className="flex gap-2">
+                <button className="text-indigo-600 hover:text-indigo-800">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                </button>
+                <button className="text-red-600 hover:text-red-800">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header/Navigation */}
+      <header className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center">
+              <div className="flex-shrink-0 flex items-center">
+                <svg className="h-8 w-8 text-indigo-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
+                </svg>
+                <span className="ml-2 text-xl font-bold text-gray-900">DigitalID</span>
+              </div>
+              
+              <nav className="hidden md:ml-8 md:flex space-x-8">
+                <a href="#features" className="text-gray-900 hover:text-indigo-600 px-3 py-2 text-sm font-medium">Features</a>
+                <a href="#pricing" className="text-gray-900 hover:text-indigo-600 px-3 py-2 text-sm font-medium">Pricing</a>
+                <a href="#testimonials" className="text-gray-900 hover:text-indigo-600 px-3 py-2 text-sm font-medium">Testimonials</a>
+                <a href="#faq" className="text-gray-900 hover:text-indigo-600 px-3 py-2 text-sm font-medium">FAQ</a>
+              </nav>
+            </div>
+            
+            <div className="flex items-center">
+              <button className="hidden md:inline-flex mr-4 text-gray-700 hover:text-indigo-600 text-sm font-medium">Log in</button>
+              <button className="hidden md:inline-flex bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium transition">
+                Sign up
+              </button>
+              
+              <button 
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="md:hidden ml-4 p-2 rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-100 focus:outline-none"
+              >
+                <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        {/* Mobile menu */}
+        {isMenuOpen && (
+          <div className="md:hidden">
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+              <a href="#features" className="block px-3 py-2 rounded-md text-base font-medium text-gray-900 hover:bg-gray-100">Features</a>
+              <a href="#pricing" className="block px-3 py-2 rounded-md text-base font-medium text-gray-900 hover:bg-gray-100">Pricing</a>
+              <a href="#testimonials" className="block px-3 py-2 rounded-md text-base font-medium text-gray-900 hover:bg-gray-100">Testimonials</a>
+              <a href="#faq" className="block px-3 py-2 rounded-md text-base font-medium text-gray-900 hover:bg-gray-100">FAQ</a>
+              <div className="pt-2 pb-3 border-t border-gray-200">
+                <a href="#" className="block px-3 py-2 rounded-md text-base font-medium text-gray-900 hover:bg-gray-100">Log in</a>
+                <a href="#" className="block px-3 py-2 rounded-md text-base font-medium bg-indigo-600 text-white hover:bg-indigo-700">Sign up</a>
+              </div>
+            </div>
+          </div>
+        )}
+      </header>
+
+      {/* Main Content */}
+      <main>
+        {/* Hero Section */}
+        <section className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32">
+            <div className="text-center md:text-left md:flex md:items-center md:justify-between">
+              <div className="md:w-1/2">
+                <h1 className="text-4xl md:text-5xl font-extrabold leading-tight mb-4">
+                  Organize sua identidade digital como um profissional
+                </h1>
+                <p className="text-xl text-indigo-100 mb-8 max-w-lg mx-auto md:mx-0">
+                  Tudo em um só lugar: contratos, logos, senhas, links, pitch, release, collabs e muito mais
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                  <button className="bg-white text-indigo-600 hover:bg-indigo-50 px-8 py-3 rounded-lg font-medium transition shadow-md">
+                    Começar grátis
+                  </button>
+                  <button className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-indigo-600 px-8 py-3 rounded-lg font-medium transition">
+                    Ver demonstração
+                  </button>
+                </div>
+              </div>
+              <div className="mt-12 md:mt-0 md:w-1/2 md:pl-12">
+                <div className="bg-white rounded-lg shadow-2xl overflow-hidden">
+                  <div className="p-4 bg-gray-800 text-white flex items-center">
+                    <div className="flex space-x-1.5">
+                      <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                      <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                      <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                  </div>
+                  <div className="p-6">
+                    <div className="space-y-4">
+                      <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                      <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                      <div className="h-4 bg-gray-200 rounded w-full"></div>
+                      <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Features Section */}
+        <section id="features" className="py-16 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                Tudo que você precisa para gerenciar sua identidade digital
+              </h2>
+              <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-500">
+                Uma plataforma completa para influenciadores, TikTokers, YouTubers e streamers
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="bg-gray-50 rounded-lg p-6">
+                <div className="inline-flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white mb-4">
+                  <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">Gerenciamento de Contratos</h3>
+                <p className="text-gray-500">
+                  Organize, acompanhe e gerencie todos os seus contratos em um só lugar com lembretes de vencimento e notificações.
+                </p>
+              </div>
+              
+              <div className="bg-gray-50 rounded-lg p-6">
+                <div className="inline-flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white mb-4">
+                  <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">Gerenciador de Senhas</h3>
+                <p className="text-gray-500">
+                  Armazene e gerencie suas senhas de forma segura com acesso fácil às suas contas de redes sociais e plataformas.
+                </p>
+              </div>
+              
+              <div className="bg-gray-50 rounded-lg p-6">
+                <div className="inline-flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white mb-4">
+                  <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">Geração Automática de Media Kit</h3>
+                <p className="text-gray-500">
+                  Crie kits de mídia profissionais em minutos com modelos personalizáveis e atualizações automáticas das suas estatísticas.
+                </p>
+              </div>
+              
+              <div className="bg-gray-50 rounded-lg p-6">
+                <div className="inline-flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white mb-4">
+                  <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">Backup na Nuvem (PRO)</h3>
+                <p className="text-gray-500">
+                  Acesso seguro e ilimitado aos seus arquivos com backup automático e sincronização entre dispositivos (disponível no plano PRO).
+                </p>
+              </div>
+              
+              <div className="bg-gray-50 rounded-lg p-6">
+                <div className="inline-flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white mb-4">
+                  <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">Colaborações e Networking</h3>
+                <p className="text-gray-500">
+                  Conecte-se com outros criadores e marcas, compartilhe seus kits e gerencie colaborações diretamente na plataforma.
+                </p>
+              </div>
+              
+              <div className="bg-gray-50 rounded-lg p-6">
+                <div className="inline-flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white mb-4">
+                  <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">Analytics Integrados</h3>
+                <p className="text-gray-500">
+                  Monitore seu desempenho em diferentes plataformas e veja insights sobre seu crescimento e engajamento.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Testimonials Section */}
+        <section id="testimonials" className="py-16 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                O que os criadores estão dizendo
+              </h2>
+              <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-500">
+                Junte-se a uma comunidade de criadores que estão transformando sua maneira de trabalhar
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="bg-white rounded-lg shadow p-6">
+                <div className="flex items-center mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <svg key={i} className="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+                <p className="text-gray-600 mb-4">
+                  "DigitalID transformou completamente minha maneira de organizar meu trabalho. Antes eu tinha documentos espalhados por todos os lugares, agora tudo está em um só lugar e muito mais profissional."
+                </p>
+                <div className="flex items-center">
+                  <img className="h-10 w-10 rounded-full" src="https://placehold.co/100x100?text=LC" alt="Lucas Costa" />
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-gray-900">Lucas Costa</p>
+                    <p className="text-sm text-gray-500">@lucascosta_official</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-white rounded-lg shadow p-6">
+                <div className="flex items-center mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <svg key={i} className="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+                <p className="text-gray-600 mb-4">
+                  "O gerador de media kit é incrível! Salveu meu dia quando precisei enviar meu pitch para uma marca importante. Recomendo demais para qualquer criador sério."
+                </p>
+                <div className="flex items-center">
+                  <img className="h-10 w-10 rounded-full" src="https://placehold.co/100x100?text=AM" alt="Ana Maria" />
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-gray-900">Ana Maria</p>
+                    <p className="text-sm text-gray-500">@anamariablogger</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-white rounded-lg shadow p-6">
+                <div className="flex items-center mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <svg key={i} className="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+                <p className="text-gray-600 mb-4">
+                  "O plano PRO é um investimento que vale a pena. O backup na nuvem me dá tranquilidade e o sistema de colaboração facilitou muito minhas parcerias com outros criadores."
+                </p>
+                <div className="flex items-center">
+                  <img className="h-10 w-10 rounded-full" src="https://placehold.co/100x100?text=MC" alt="Marcos Costa" />
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-gray-900">Marcos Costa</p>
+                    <p className="text-sm text-gray-500">@marcoscstv</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Pricing Section */}
+        <section id="pricing" className="py-16 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                Planos e Preços
+              </h2>
+              <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-500">
+                Comece grátis ou escolha o plano PRO para recursos avançados
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Free Plan */}
+              <div className="bg-white rounded-lg shadow overflow-hidden">
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold text-gray-900">Plano Gratuito</h3>
+                  <p className="mt-2 text-gray-500">Para criadores que estão começando</p>
+                  <div className="mt-4">
+                    <span className="text-4xl font-extrabold text-gray-900">R$0</span>
+                    <span className="text-gray-500">/mês</span>
+                  </div>
+                </div>
+                <div className="px-6 py-5 bg-gray-50 border-t border-gray-200">
+                  <ul className="space-y-3">
+                    <li className="flex items-center">
+                      <svg className="h-5 w-5 text-green-500 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                      Gerenciamento básico de contratos
+                    </li>
+                    <li className="flex items-center">
+                      <svg className="h-5 w-5 text-green-500 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                      Gerenciador de senhas
+                    </li>
+                    <li className="flex items-center">
+                      <svg className="h-5 w-5 text-green-500 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                      Geração básica de media kit
+                    </li>
+                    <li className="flex items-center">
+                      <svg className="h-5 w-5 text-green-500 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                      5GB de armazenamento local
+                    </li>
+                    <li className="flex items-center text-gray-400">
+                      <svg className="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                      </svg>
+                      Backup na nuvem
+                    </li>
+                    <li className="flex items-center text-gray-400">
+                      <svg className="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                      </svg>
+                      Colaboração com outras contas
+                    </li>
+                  </ul>
+                </div>
+                <div className="p-6">
+                  <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-4 rounded-lg transition">
+                    Começar grátis
+                  </button>
+                </div>
+              </div>
+              
+              {/* PRO Plan */}
+              <div className="bg-indigo-600 rounded-lg shadow overflow-hidden">
+                <div className="p-6">
+                  <div className="flex items-center">
+                    <span className="bg-white text-indigo-600 px-3 py-1 rounded-full text-sm font-semibold mr-2">Mais popular</span>
+                    <span className="bg-white bg-opacity-20 text-white px-3 py-1 rounded-full text-sm font-semibold">PRO</span>
+                  </div>
+                  <h3 className="mt-4 text-xl font-semibold text-white">Plano Profissional</h3>
+                  <p className="mt-2 text-indigo-100">Para criadores sérios que querem crescer</p>
+                  <div className="mt-4">
+                    <span className="text-4xl font-extrabold text-white">R$19,90</span>
+                    <span className="text-indigo-100">/mês</span>
+                  </div>
+                </div>
+                <div className="px-6 py-5 bg-indigo-500 bg-opacity-20 border-t border-indigo-500 border-opacity-30">
+                  <ul className="space-y-3">
+                    <li className="flex items-center">
+                      <svg className="h-5 w-5 text-green-400 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                      Gerenciamento avançado de contratos
+                    </li>
+                    <li className="flex items-center">
+                      <svg className="h-5 w-5 text-green-400 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                      Gerenciador de senhas com segurança avançada
+                    </li>
+                    <li className="flex items-center">
+                      <svg className="h-5 w-5 text-green-400 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                      Geração automática de media kit com modelos profissionais
+                    </li>
+                    <li className="flex items-center">
+                      <svg className="h-5 w-5 text-green-400 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                      Backup ilimitado na nuvem
+                    </li>
+                    <li className="flex items-center">
+                      <svg className="h-5 w-5 text-green-400 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                      Colaboração com outras contas
+                    </li>
+                    <li className="flex items-center">
+                      <svg className="h-5 w-5 text-green-400 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                      Analytics integrados com dados de performance
+                    </li>
+                  </ul>
+                </div>
+                <div className="p-6">
+                  <button className="w-full bg-white text-indigo-600 hover:bg-indigo-50 py-3 px-4 rounded-lg transition">
+                    Começar versão PRO
+                  </button>
+                  <p className="mt-3 text-center text-sm text-indigo-100">
+                    7 dias grátis, sem cartão
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ Section */}
+        <section id="faq" className="py-16 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                Perguntas Frequentes
+              </h2>
+              <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-500">
+                Encontre respostas para as perguntas mais comuns sobre o DigitalID
+              </p>
+            </div>
+
+            <div className="max-w-3xl mx-auto">
+              <div className="space-y-6">
+                <div className="bg-white rounded-lg shadow p-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">Como funciona o plano gratuito?</h3>
+                  <p className="text-gray-500">
+                    O plano gratuito permite acesso a funcionalidades básicas como gerenciamento de contratos, gerenciador de senhas e geração básica de media kit. Você terá 5GB de armazenamento local e todas as ferramentas essenciais para começar a organizar sua identidade digital.
+                  </p>
+                </div>
+                
+                <div className="bg-white rounded-lg shadow p-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">Quais são os recursos do plano PRO?</h3>
+                  <p className="text-gray-500">
+                    O plano PRO inclui backup ilimitado na nuvem, geração automática de media kit com modelos profissionais, colaboração com outras contas, analytics integrados e todas as funcionalidades do plano gratuito. É ideal para criadores que querem crescer e profissionalizar seu trabalho.
+                  </p>
+                </div>
+                
+                <div className="bg-white rounded-lg shadow p-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">Posso fazer upgrade do meu plano a qualquer momento?</h3>
+                  <p className="text-gray-500">
+                    Sim! Você pode fazer upgrade do seu plano a qualquer momento diretamente no painel de configurações da sua conta. Você também pode cancelar a renovação do plano PRO quando quiser.
+                  </p>
+                </div>
+                
+                <div className="bg-white rounded-lg shadow p-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">Como funciona a segurança dos meus dados?</h3>
+                  <p className="text-gray-500">
+                    A segurança dos seus dados é nossa prioridade. Todos os dados são criptografados tanto em trânsito quanto em repouso. Para o plano PRO, seus dados são armazenados com segurança na nuvem com backups regulares e acesso restrito apenas a você.
+                  </p>
+                </div>
+                
+                <div className="bg-white rounded-lg shadow p-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">Como posso entrar em contato com o suporte?</h3>
+                  <p className="text-gray-500">
+                    Você pode entrar em contato com nosso suporte através do email support@digitalid.com ou usando o chat ao vivo em nosso site. Nossa equipe está disponível 24/7 para ajudar com qualquer dúvida ou problema.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="bg-indigo-600 text-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div className="text-center">
+              <h2 className="text-3xl font-extrabold sm:text-4xl">
+                Pronto para organizar sua identidade digital?
+              </h2>
+              <p className="mt-4 text-xl text-indigo-100 max-w-3xl mx-auto">
+                Comece hoje mesmo com nosso plano gratuito ou experimente o plano PRO por 7 dias grátis sem compromisso.
+              </p>
+              <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+                <button className="bg-white text-indigo-600 hover:bg-indigo-50 px-8 py-3 rounded-lg font-medium transition shadow-md">
+                  Começar grátis
+                </button>
+                <button className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-indigo-600 px-8 py-3 rounded-lg font-medium transition">
+                  Experimentar PRO
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* App Interface Demo Section */}
+        <section className="py-16 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                Veja como é a interface do DigitalID
+              </h2>
+              <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-500">
+                Explore nossa interface intuitiva e fácil de usar
+              </p>
+            </div>
+            
+            <div className="bg-white rounded-lg shadow overflow-hidden">
+              <div className="flex border-b border-gray-200">
+                <button 
+                  onClick={() => setActiveTab('dashboard')}
+                  className={`px-6 py-4 font-medium text-sm ${
+                    activeTab === 'dashboard' 
+                      ? 'text-indigo-600 border-b-2 border-indigo-600' 
+                      : 'text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  Dashboard
+                </button>
+                <button 
+                  onClick={() => setActiveTab('contracts')}
+                  className={`px-6 py-4 font-medium text-sm ${
+                    activeTab === 'contracts' 
+                      ? 'text-indigo-600 border-b-2 border-indigo-600' 
+                      : 'text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  Contratos
+                </button>
+                <button 
+                  onClick={() => setActiveTab('media-kit')}
+                  className={`px-6 py-4 font-medium text-sm ${
+                    activeTab === 'media-kit' 
+                      ? 'text-indigo-600 border-b-2 border-indigo-600' 
+                      : 'text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  Media Kit
+                </button>
+                <button 
+                  onClick={() => setActiveTab('password-manager')}
+                  className={`px-6 py-4 font-medium text-sm ${
+                    activeTab === 'password-manager' 
+                      ? 'text-indigo-600 border-b-2 border-indigo-600' 
+                      : 'text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  Senhas
+                </button>
+              </div>
+              
+              <div className="p-6">
+                {activeTab === 'dashboard' && renderDashboard()}
+                {activeTab === 'contracts' && renderContracts()}
+                {activeTab === 'media-kit' && renderMediaKit()}
+                {activeTab === 'password-manager' && renderPasswordManager()}
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-gray-800 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Product</h3>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-gray-400 hover:text-white">Features</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white">Pricing</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white">Security</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white">Status</a></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Company</h3>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-gray-400 hover:text-white">About</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white">Blog</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white">Careers</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white">Press</a></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Resources</h3>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-gray-400 hover:text-white">Documentation</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white">Community</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white">Tutorials</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white">Support</a></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Legal</h3>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-gray-400 hover:text-white">Privacy</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white">Terms</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white">Cookies</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white">Licenses</a></li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="mt-12 pt-8 border-t border-gray-700">
+            <div className="flex flex-col md:flex-row justify-between items-center">
+              <div className="flex items-center mb-4 md:mb-0">
+                <svg className="h-8 w-8 text-indigo-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
+                </svg>
+                <span className="ml-2 text-xl font-bold">DigitalID</span>
+              </div>
+              
+              <div className="flex space-x-6">
+                <a href="#" className="text-gray-400 hover:text-white">
+                  <span className="sr-only">Facebook</span>
+                  <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fillRule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clipRule="evenodd" />
+                  </svg>
+                </a>
+                <a href="#" className="text-gray-400 hover:text-white">
+                  <span className="sr-only">Instagram</span>
+                  <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fillRule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.012-2.947-.06-3.96-.045-.975-.214-1.51-.352-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.067-.047-1.407-.058-4.043-.058h-.63z" clipRule="evenodd" />
+                  </svg>
+                </a>
+                <a href="#" className="text-gray-400 hover:text-white">
+                  <span className="sr-only">Twitter</span>
+                  <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
+                  </svg>
+                </a>
+                <a href="#" className="text-gray-400 hover:text-white">
+                  <span className="sr-only">GitHub</span>
+                  <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-.887-1.46-1.103-1.46-1.062-.08-1.036-.872-1.036-.872-.605-.413-.101-.403-.101-.403.453.043 1.036.163 1.036.163.6.586 1.23.744 1.94.744.697 0 1.036-.614 1.036-1.222 0-.715-.014-1.295-.014-1.483 0-1.448.866-1.766 1.634-1.982.498-.13.679-.483.679-.826 0-.414-.015-.746-.015-1.134 0-.11.01-.22.026-.316.148-.713 1.044-1.235 1.96-1.235.572 0 1.112.199 1.486.532 1.07 1.044 1.267 2.473.49 3.726.278.745.91 2.237.91 2.237a1.574 1.574 0 01-1.016.446c-.352 0-.709-.022-1.067-.08c.725.442 1.51.642 2.336.642 7.22 0 11.218-5.408 11.218-10.114 0-.47-.02-1.037-.142-1.494A3.736 3.736 0 0022 4.101" clipRule="evenodd" />
+                  </svg>
+                </a>
+              </div>
+              
+              <p className="mt-8 md:mt-0 text-gray-400 text-sm">
+                &copy; 2023 DigitalID, Inc. All rights reserved.
+              </p>
+            </div>
+          </div>
+        </footer>
+      </div>
+  );
+}
+```
